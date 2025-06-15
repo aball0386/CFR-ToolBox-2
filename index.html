@@ -249,10 +249,10 @@
 
 <div class="toolbox">
   <button onclick="openApp('uk.co.classprofessional.cfr')">Responder Plus</button>
-  <button onclick="openApp('com.gumptionmultimedia.news2chart')">NEWS2+</button>
+  <button onclick="openApp('com.gumptionmultimedia.news2chart')">NEWS2</button>
   <button onclick="openWebsite('https://app.goassemble.com')">Assemble</button>
   <button onclick="openApp('uk.co.terrafix.nma')">NMA</button>
-  <button onclick="openCustomUri('w3w://show?currentlocation', 'https://what3words.com')">W3W Location</button>
+  <button onclick="openCustomUri('w3w://show?currentlocation', 'https://what3words.com')">W3W</button>
   <button onclick="openApp('com.softwareeurope.expensesmobile')">CFR Expenses</button>
   <button onclick="openMail()">Trust Email</button>
   <button onclick="callNumber('03001239106')">Response Desk West</button>
@@ -281,6 +281,32 @@
   function toggleMenu() {
     const panel = document.getElementById('settingsPanel');
     panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+  }
+
+  // Open custom URI (e.g. for w3w) with fallback
+  function openCustomUri(uri, fallbackUrl) {
+    const isAndroid = /android/i.test(navigator.userAgent);
+    if (!isAndroid) {
+      window.open(fallbackUrl, '_blank');
+      return;
+    }
+
+    let opened = false;
+    window.location.href = uri;
+
+    setTimeout(() => {
+      if (!opened) {
+        if (confirm('App not detected. Open Play Store page?')) {
+          window.open(fallbackUrl, '_blank');
+        }
+      }
+    }, 1500);
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        opened = true;
+      }
+    });
   }
 
   // Dark mode toggle
@@ -332,7 +358,7 @@
     }
   };
 
-  // Simple bionic reading effect
+  // Bionic reading effect
   function applyBionicReading() {
     const elements = document.querySelectorAll('.toolbox button, #stopwatch');
     elements.forEach(el => {
@@ -397,30 +423,9 @@
     window.open(url, '_blank');
   }
 
-  // Open custom URI with fallback (for what3words)
-  function openCustomUri(uri, fallbackUrl) {
-    const isAndroid = /android/i.test(navigator.userAgent);
-    if (!isAndroid) {
-      window.open(fallbackUrl, '_blank');
-      return;
-    }
-
-    let opened = false;
-    window.location.href = uri;
-
-    setTimeout(() => {
-      if (!opened) {
-        if (confirm('App not detected. Open Play Store page?')) {
-          window.open(fallbackUrl, '_blank');
-        }
-      }
-    }, 1500);
-
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) {
-        opened = true;
-      }
-    });
+  // Open mail client using mailto:
+  function openMail() {
+    window.location.href = 'mailto:?subject=SECamb%20CFR%20Enquiry';
   }
 
   // Call phone number
@@ -428,7 +433,7 @@
     window.location.href = `tel:${number}`;
   }
 
-  // Stopwatch toggle start/stop and reset
+  // Stopwatch controls
   let stopwatchInterval = null;
   let elapsedTime = 0;
   const startStopBtn = document.getElementById('startStopBtn');
@@ -438,9 +443,9 @@
     const mins = Math.floor((elapsedTime % 3600) / 60);
     const secs = elapsedTime % 60;
     document.getElementById('time').textContent =
-      `${hours.toString().padStart(2,'0')}:` +
-      `${mins.toString().padStart(2,'0')}:` +
-      `${secs.toString().padStart(2,'0')}`;
+      `${hours.toString().padStart(2, '0')}:` +
+      `${mins.toString().padStart(2, '0')}:` +
+      `${secs.toString().padStart(2, '0')}`;
   }
 
   function toggleStopwatch() {
@@ -472,6 +477,7 @@
 
 </body>
 </html>
+
 
 
 
