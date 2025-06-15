@@ -4,32 +4,7 @@ function toggleMenu() {
   panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
 }
 
-function openCustomUri(uri, fallbackUrl) {
-  const isAndroid = /android/i.test(navigator.userAgent);
-  if (!isAndroid) {
-    window.open(fallbackUrl, '_blank');
-    return;
-  }
-
-  let opened = false;
-  window.location.href = uri;
-
-  setTimeout(() => {
-    if (!opened) {
-      if (confirm('App not detected. Open Play Store page?')) {
-        window.open(fallbackUrl, '_blank');
-      }
-    }
-  }, 1500);
-
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-      opened = true;
-    }
-  });
-}
-
-//W3W Custom URI
+// Open custom URI (e.g. for w3w) with fallback
 function openCustomUri(uri, fallbackUrl) {
   const isAndroid = /android/i.test(navigator.userAgent);
   if (!isAndroid) {
@@ -169,8 +144,6 @@ function openWebsite(url) {
   window.open(url, '_blank');
 }
 
-// Open native Contacts app on Android - removed, replaced with call buttons
-
 // Call a phone number via phone dialer
 function callNumber(number) {
   window.location.href = `tel:${number}`;
@@ -216,5 +189,6 @@ function resetStopwatch() {
 }
 
 updateStopwatchDisplay();
+
 
 
