@@ -64,19 +64,31 @@
     background: rgba(18, 18, 18, 0.85);
   }
 
-  header {
-    background-color: var(--primary-color);
-    padding: 10px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 900px;
-    width: 100%;
-    margin: 0 auto;
-    box-sizing: border-box;
-    color: white;
-    user-select: none;
-  }
+ header {
+  background-color: var(--primary-color);
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  /* Make header full width */
+  width: 100vw;       /* full viewport width */
+  position: fixed;    /* optional, if you want it fixed on top */
+  top: 0;
+  left: 0;
+
+  box-sizing: border-box;
+  color: white;
+  user-select: none;
+  z-index: 1200;      /* to stay on top */
+}
+
+/* If body or html have margin/padding, reset them */
+body, html {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* prevent horizontal scroll */
+}
 
   header h1 {
     margin: 0;
