@@ -4,7 +4,7 @@ function toggleMenu() {
   panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
 }
 
-// Open custom URI (e.g. for what3words) with fallback
+// Open custom URI (e.g., what3words) with fallback to website
 function openCustomUri(uri, fallbackUrl) {
   const isAndroid = /android/i.test(navigator.userAgent);
   if (!isAndroid) {
@@ -40,7 +40,7 @@ document.getElementById('darkModeToggle').addEventListener('change', e => {
   localStorage.setItem('darkMode', e.target.checked);
 });
 
-// Theme color toggle
+// Theme color toggle between ambulance green and responder red
 document.getElementById('themeColorToggle').addEventListener('change', e => {
   if (e.target.checked) {
     document.documentElement.classList.add('responder-red');
@@ -79,7 +79,7 @@ window.onload = () => {
   }
 };
 
-// Apply bionic reading effect (bold first half of words)
+// Apply bionic reading effect (bold first half of each word)
 function applyBionicReading() {
   const elements = document.querySelectorAll('.toolbox button, #stopwatch');
   elements.forEach(el => {
@@ -98,7 +98,7 @@ function removeBionicReading() {
   location.reload();
 }
 
-// Open app with Android intent and fallback to Play Store/web
+// Open an app by package name with fallback to Play Store or website
 function openApp(packageName, fallbackUrl = null, isOutlook = false) {
   if (!packageName) return;
 
@@ -141,12 +141,12 @@ function openApp(packageName, fallbackUrl = null, isOutlook = false) {
   });
 }
 
-// Open website in new tab
+// Open website in a new tab
 function openWebsite(url) {
   window.open(url, '_blank');
 }
 
-// Open mail client with mailto
+// Open default email client with mailto:
 function openMail() {
   window.location.href = 'mailto:?subject=SECamb%20CFR%20Enquiry';
 }
@@ -156,7 +156,7 @@ function callNumber(number) {
   window.location.href = `tel:${number}`;
 }
 
-// Stopwatch variables and functions
+// Stopwatch logic and controls
 let stopwatchInterval = null;
 let elapsedTime = 0;
 const startStopBtn = document.getElementById('startStopBtn');
@@ -197,6 +197,7 @@ function resetStopwatch() {
 
 // Initialize stopwatch display on load
 updateStopwatchDisplay();
+
 
 
 
