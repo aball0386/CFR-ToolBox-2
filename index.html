@@ -197,12 +197,12 @@
     height: 48px;
     padding: 0;
     border-radius: 50%;
-    background-color:
+    background-color: transparent; /* transparent background */
     color: white;
     border: none;
     font-size: 28px;
     cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    box-shadow: none;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -216,7 +216,7 @@
   }
 
   #settingsBtn:hover {
-    background-color: #004d38;
+    background-color: rgba(255, 255, 255, 0.1); /* subtle hover highlight */
   }
 
   /* Bionic reading simple effect */
@@ -255,7 +255,8 @@
   <button onclick="openApp('com.what3words.android', 'https://what3words.com')">W3W</button>
   <button onclick="openApp('com.softwareeurope.expensesmobile')">CFR Expenses</button>
   <button onclick="openApp('com.microsoft.office.outlook', null, true)">Trust Email</button>
-  <button onclick="openContacts()">Contacts</button>
+  <button onclick="callNumber('03001239106')">Response Desk West</button>
+  <button onclick="callNumber('03001231252')">CCP Desk East</button>
   <button onclick="openWebsite('https://aball0386.github.io/Falls-Assist-App/index.html')">Falls Assist</button>
 </div>
 
@@ -394,18 +395,12 @@
     window.open(url, '_blank');
   }
 
-  // Open native Contacts app on Android
-  function openContacts() {
-    const isAndroid = /android/i.test(navigator.userAgent);
-    if (isAndroid) {
-      window.location.href = 'intent://contacts/people/#Intent;action=android.intent.action.VIEW;category=android.intent.category.DEFAULT;end';
-    } else {
-      alert('Opening Contacts app is supported only on Android devices.');
-    }
+  // Call phone number
+  function callNumber(number) {
+    window.location.href = `tel:${number}`;
   }
 
   // Stopwatch toggle start/stop and reset
-
   let stopwatchInterval = null;
   let elapsedTime = 0;
   const startStopBtn = document.getElementById('startStopBtn');
@@ -422,12 +417,10 @@
 
   function toggleStopwatch() {
     if (stopwatchInterval) {
-      // Stop it
       clearInterval(stopwatchInterval);
       stopwatchInterval = null;
       startStopBtn.textContent = 'Start';
     } else {
-      // Start it
       stopwatchInterval = setInterval(() => {
         elapsedTime++;
         updateStopwatchDisplay();
@@ -451,4 +444,5 @@
 
 </body>
 </html>
+
 
