@@ -252,7 +252,7 @@
   <button onclick="openApp('com.gumptionmultimedia.news2chart')">NEWS2</button>
   <button onclick="openApp('com.goassemble.app')">Assemble</button>
   <button onclick="openApp('uk.co.terrafix.nma')">NMA</button>
-  <button onclick="openCustomUri('w3w://show?currentlocation','https://what3words.com')">W3W Location</button>
+  <button onclick="openCustomUri('w3w://show?currentlocation', 'https://what3words.com')">W3W Location</button>
   <button onclick="openApp('com.softwareeurope.expensesmobile')">CFR Expenses</button>
   <button onclick="openApp('com.microsoft.office.outlook', null, true)">Trust Email</button>
   <button onclick="callNumber('03001239106')">Response Desk West</button>
@@ -367,9 +367,11 @@
       fallbackUrl = `https://play.google.com/store/apps/details?id=${packageName}`;
     }
 
-    let intentUrl = `intent://#Intent;package=${packageName};S.browser_fallback_url=${encodeURIComponent(fallbackUrl)};end`;
+    let intentUrl;
     if (isOutlook) {
       intentUrl = `intent://#Intent;package=com.microsoft.office.outlook;S.browser_fallback_url=${encodeURIComponent(fallbackUrl)};end`;
+    } else {
+      intentUrl = `intent://#Intent;package=${packageName};S.browser_fallback_url=${encodeURIComponent(fallbackUrl)};end`;
     }
 
     let opened = false;
@@ -393,6 +395,32 @@
   // Open website in new tab
   function openWebsite(url) {
     window.open(url, '_blank');
+  }
+
+  // Open custom URI with fallback (for what3words)
+  function openCustomUri(uri, fallbackUrl) {
+    const isAndroid = /android/i.test(navigator.userAgent);
+    if (!isAndroid) {
+      window.open(fallbackUrl, '_blank');
+      return;
+    }
+
+    let opened = false;
+    window.location.href = uri;
+
+    setTimeout(() => {
+      if (!opened) {
+        if (confirm('App not detected. Open Play Store page?')) {
+          window.open(fallbackUrl, '_blank');
+        }
+      }
+    }, 1500);
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        opened = true;
+      }
+    });
   }
 
   // Call phone number
@@ -444,5 +472,7 @@
 
 </body>
 </html>
+
+
 
 
