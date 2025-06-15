@@ -197,7 +197,7 @@
     height: 48px;
     padding: 0;
     border-radius: 50%;
-    background-color: transparent; /* transparent background */
+    background-color: transparent;
     color: white;
     border: none;
     font-size: 28px;
@@ -216,7 +216,7 @@
   }
 
   #settingsBtn:hover {
-    background-color: rgba(255, 255, 255, 0.1); /* subtle hover highlight */
+    background-color: rgba(255, 255, 255, 0.1);
   }
 
   /* Bionic reading simple effect */
@@ -250,7 +250,7 @@
 <div class="toolbox">
   <button onclick="openApp('uk.co.classprofessional.cfr')">Responder Plus</button>
   <button onclick="openApp('com.gumptionmultimedia.news2chart')">NEWS2</button>
-  <button onclick="openWebsite('https://app.goassemble.com')">Assemble</button>
+  <button onclick="openApp('com.goassemble.app', 'https://app.goassemble.com')">Assemble</button>
   <button onclick="openApp('uk.co.terrafix.nma')">NMA</button>
   <button onclick="openCustomUri('w3w://show?currentlocation', 'https://what3words.com')">W3W</button>
   <button onclick="openApp('com.softwareeurope.expensesmobile')">CFR Expenses</button>
@@ -283,7 +283,7 @@
     panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
   }
 
-  // Open custom URI (e.g. for w3w) with fallback
+  // Open custom URI with fallback
   function openCustomUri(uri, fallbackUrl) {
     const isAndroid = /android/i.test(navigator.userAgent);
     if (!isAndroid) {
@@ -358,7 +358,7 @@
     }
   };
 
-  // Bionic reading effect
+  // Apply bionic reading effect
   function applyBionicReading() {
     const elements = document.querySelectorAll('.toolbox button, #stopwatch');
     elements.forEach(el => {
@@ -423,17 +423,17 @@
     window.open(url, '_blank');
   }
 
-  // Open mail client using mailto:
+  // Open mail client with mailto:
   function openMail() {
     window.location.href = 'mailto:?subject=SECamb%20CFR%20Enquiry';
   }
 
-  // Call phone number
+  // Call phone number via dialer
   function callNumber(number) {
     window.location.href = `tel:${number}`;
   }
 
-  // Stopwatch controls
+  // Stopwatch variables and functions
   let stopwatchInterval = null;
   let elapsedTime = 0;
   const startStopBtn = document.getElementById('startStopBtn');
@@ -477,6 +477,7 @@
 
 </body>
 </html>
+
 
 
 
