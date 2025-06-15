@@ -4,7 +4,7 @@ function toggleMenu() {
   panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
 }
 
-// Open custom URI (e.g. for w3w) with fallback
+// Open custom URI (e.g. for what3words) with fallback
 function openCustomUri(uri, fallbackUrl) {
   const isAndroid = /android/i.test(navigator.userAgent);
   if (!isAndroid) {
@@ -32,7 +32,7 @@ function openCustomUri(uri, fallbackUrl) {
 
 // Dark mode toggle
 document.getElementById('darkModeToggle').addEventListener('change', e => {
-  if(e.target.checked) {
+  if (e.target.checked) {
     document.body.classList.add('dark-mode');
   } else {
     document.body.classList.remove('dark-mode');
@@ -42,7 +42,7 @@ document.getElementById('darkModeToggle').addEventListener('change', e => {
 
 // Theme color toggle
 document.getElementById('themeColorToggle').addEventListener('change', e => {
-  if(e.target.checked) {
+  if (e.target.checked) {
     document.documentElement.classList.add('responder-red');
   } else {
     document.documentElement.classList.remove('responder-red');
@@ -52,7 +52,7 @@ document.getElementById('themeColorToggle').addEventListener('change', e => {
 
 // Bionic reading toggle
 document.getElementById('bionicToggle').addEventListener('change', e => {
-  if(e.target.checked) {
+  if (e.target.checked) {
     document.body.classList.add('bionic-reading');
     applyBionicReading();
   } else {
@@ -62,24 +62,24 @@ document.getElementById('bionicToggle').addEventListener('change', e => {
   localStorage.setItem('bionicReading', e.target.checked);
 });
 
-// Load saved preferences
+// Load saved preferences on page load
 window.onload = () => {
-  if(localStorage.getItem('darkMode') === 'true') {
+  if (localStorage.getItem('darkMode') === 'true') {
     document.body.classList.add('dark-mode');
     document.getElementById('darkModeToggle').checked = true;
   }
-  if(localStorage.getItem('themeColor') === 'red') {
+  if (localStorage.getItem('themeColor') === 'red') {
     document.documentElement.classList.add('responder-red');
     document.getElementById('themeColorToggle').checked = true;
   }
-  if(localStorage.getItem('bionicReading') === 'true') {
+  if (localStorage.getItem('bionicReading') === 'true') {
     document.body.classList.add('bionic-reading');
     document.getElementById('bionicToggle').checked = true;
     applyBionicReading();
   }
 };
 
-// Simple bionic reading effect
+// Apply bionic reading effect (bold first half of words)
 function applyBionicReading() {
   const elements = document.querySelectorAll('.toolbox button, #stopwatch');
   elements.forEach(el => {
@@ -92,15 +92,53 @@ function applyBionicReading() {
     el.innerHTML = newHtml;
   });
 }
+
+// Remove bionic reading by reloading the page
 function removeBionicReading() {
   location.reload();
 }
 
-// Open Mail Default
-function openMail() {
-  // Customize recipient, subject, or body if you want
-  window.location.href = 'mailto:?subject=SECamb%20CFR%20Enquiry';
+// Open app with Android intent and fallback to Play Store/web
+function openApp(packageName, fallbackUrl = null, isOutlook = false) {
+  if (!packageName) return;
 
+  const isAndroid = /android/i.test(navigator.userAgent);
+  if (!isAndroid) {
+    if (fallbackUrl) {
+      window.open(fallbackUrl, '_blank');
+    } else {
+      alert('This function works best on Android devices.');
+    }
+    return;
+  }
+
+  if (!fallbackUrl) {
+    fallbackUrl = `https://play.google.com/store/apps/details?id=${packageName}`;
+  }
+
+  let intentUrl;
+  if (isOutlook) {
+    intentUrl = `intent://#Intent;package=com.microsoft.office.outlook;S.browser_fallback_url=${encodeURIComponent(fallbackUrl)};end`;
+  } else {
+    intentUrl = `intent://#Intent;package=${packageName};S.browser_fallback_url=${encodeURIComponent(fallbackUrl)};end`;
+  }
+
+  let opened = false;
+  window.location.href = intentUrl;
+
+  setTimeout(() => {
+    if (!opened) {
+      if (confirm('App not detected. Open Play Store page?')) {
+        window.open(fallbackUrl, '_blank');
+      }
+    }
+  }, 1500);
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      opened = true;
+    }
+  });
 }
 
 // Open website in new tab
@@ -108,12 +146,17 @@ function openWebsite(url) {
   window.open(url, '_blank');
 }
 
-// Call a phone number via phone dialer
+// Open mail client with mailto
+function openMail() {
+  window.location.href = 'mailto:?subject=SECamb%20CFR%20Enquiry';
+}
+
+// Call phone number via dialer
 function callNumber(number) {
   window.location.href = `tel:${number}`;
 }
 
-// Stopwatch toggle start/stop and reset
+// Stopwatch variables and functions
 let stopwatchInterval = null;
 let elapsedTime = 0;
 const startStopBtn = document.getElementById('startStopBtn');
@@ -123,9 +166,9 @@ function updateStopwatchDisplay() {
   const mins = Math.floor((elapsedTime % 3600) / 60);
   const secs = elapsedTime % 60;
   document.getElementById('time').textContent =
-    `${hours.toString().padStart(2,'0')}:` +
-    `${mins.toString().padStart(2,'0')}:` +
-    `${secs.toString().padStart(2,'0')}`;
+    `${hours.toString().padStart(2, '0')}:` +
+    `${mins.toString().padStart(2, '0')}:` +
+    `${secs.toString().padStart(2, '0')}`;
 }
 
 function toggleStopwatch() {
@@ -152,7 +195,9 @@ function resetStopwatch() {
   updateStopwatchDisplay();
 }
 
+// Initialize stopwatch display on load
 updateStopwatchDisplay();
+
 
 
 
