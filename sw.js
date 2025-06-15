@@ -4,6 +4,57 @@ function toggleMenu() {
   panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
 }
 
+function openCustomUri(uri, fallbackUrl) {
+  const isAndroid = /android/i.test(navigator.userAgent);
+  if (!isAndroid) {
+    window.open(fallbackUrl, '_blank');
+    return;
+  }
+
+  let opened = false;
+  window.location.href = uri;
+
+  setTimeout(() => {
+    if (!opened) {
+      if (confirm('App not detected. Open Play Store page?')) {
+        window.open(fallbackUrl, '_blank');
+      }
+    }
+  }, 1500);
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      opened = true;
+    }
+  });
+}
+
+//W3W Custom URI
+function openCustomUri(uri, fallbackUrl) {
+  const isAndroid = /android/i.test(navigator.userAgent);
+  if (!isAndroid) {
+    window.open(fallbackUrl, '_blank');
+    return;
+  }
+
+  let opened = false;
+  window.location.href = uri;
+
+  setTimeout(() => {
+    if (!opened) {
+      if (confirm('App not detected. Open Play Store page?')) {
+        window.open(fallbackUrl, '_blank');
+      }
+    }
+  }, 1500);
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      opened = true;
+    }
+  });
+}
+
 // Dark mode toggle
 document.getElementById('darkModeToggle').addEventListener('change', e => {
   if(e.target.checked) {
