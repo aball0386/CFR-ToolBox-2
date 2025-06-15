@@ -116,14 +116,11 @@ function openWebsite(url) {
   window.open(url, '_blank');
 }
 
-// Open native Contacts app on Android
-function openContacts() {
-  const isAndroid = /android/i.test(navigator.userAgent);
-  if (isAndroid) {
-    window.location.href = 'intent://contacts/people/#Intent;action=android.intent.action.VIEW;category=android.intent.category.DEFAULT;end';
-  } else {
-    alert('Opening Contacts app is supported only on Android devices.');
-  }
+// Open native Contacts app on Android - removed, replaced with call buttons
+
+// Call a phone number via phone dialer
+function callNumber(number) {
+  window.location.href = `tel:${number}`;
 }
 
 // Stopwatch toggle start/stop and reset
@@ -166,4 +163,5 @@ function resetStopwatch() {
 }
 
 updateStopwatchDisplay();
+
 
