@@ -64,12 +64,21 @@
     background: rgba(18, 18, 18, 0.85);
   }
 
- header {
+header {
   background-color: var(--primary-color);
   padding: 10px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  color: white;
+  user-select: none;
+  z-index: 1200;
+  height: 60px; /* fix height */
 
   /* Make header full width */
   width: 100vw;       /* full viewport width */
