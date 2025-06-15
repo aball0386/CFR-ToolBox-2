@@ -88,9 +88,11 @@ function openApp(packageName, fallbackUrl = null, isOutlook = false) {
     fallbackUrl = `https://play.google.com/store/apps/details?id=${packageName}`;
   }
 
-  let intentUrl = `intent://#Intent;package=${packageName};S.browser_fallback_url=${encodeURIComponent(fallbackUrl)};end`;
+  let intentUrl;
   if (isOutlook) {
     intentUrl = `intent://#Intent;package=com.microsoft.office.outlook;S.browser_fallback_url=${encodeURIComponent(fallbackUrl)};end`;
+  } else {
+    intentUrl = `intent://#Intent;package=${packageName};S.browser_fallback_url=${encodeURIComponent(fallbackUrl)};end`;
   }
 
   let opened = false;
