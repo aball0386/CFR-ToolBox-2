@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CFR Toolbox</title>
+
+<!-- PWA manifest -->
+<link rel="manifest" href="manifest.json" />
+<meta name="theme-color" content="#006747" />
+
+<style>
+  :root {
+    --ambulance-green: #006747;
+    --responder-red: #a91f1f;
+    --primary-color: var(--ambulance-green);
+    --background-color: #e9f0f8;
+    --text-color: black;
+    --font-family: Arial, sans-serif;
+  }
+
+  .responder-red {
+    --primary-color: var(--responder-red);
+  }
+
+  .dark-mode {
+    --background-color: #121212;
+    --text-color: #e0e0e0;
+  }
+
+  body {
+    font-family: var(--font-family);
+    background: url('secamb.png') no-repeat center center fixed;
+    background-position-x: center;
+    background-position-y: center;
+    background-size: 40% auto;
+    background-color: var(--background-color);
+    background-blend-mode: lighten;
+    margin: 0;
+    min-height: 100vh;
+    max-width: 100vw;
+    overflow-x: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 10px 60px 10px;
+    box-sizing: border-box;
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(233, 240, 248, 0.75);
+    pointer-events: none;
+    z-index: -1;
+    transition: background 0.3s ease;
+  }
+
+  .dark-mode body::before {
+    background: rgba(18, 18, 18, 0.85);
+  }
+
+  header {
+    background-color: var(--primary-color);
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 900px;
+    width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
+    color: white;
+    user-select: none;
+  }
+
+  header h1 {
+    margin: 0;
+    font-size: calc(1.5rem + 1vw);
+    font-weight: 600;
+    color: white;
+    flex-grow: 1;
+    text-align: center;
+    user-select: text;
+  }
+
+  .header-logo {
+    height: 40px;
+    width: auto;
+    user-select: none;
+    flex-shrink: 0;
+  }
+
+  .toolbox {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px 30px;
+    width: 100%;
+    max-width: 600px;
+    margin: 40px auto 40px auto;
+    box-sizing: border-box;
+    justify-items: center;
+  }
+
+  button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    min-width: 200px;
+    text-align: center;
+    transition: background-color 0.3s ease;
+  }
+
+  button:hover {
+    background-color: #004d38;
+  }
+
+  #stopwatch {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  #time {
+    font-size: calc(1.5rem + 1vw);
+    margin-bottom: 10px;
+  }
+
+  .stopwatch-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 10px;
+  }
+
+  .stopwatch-buttons button {
+    min-width: 120px;
+    padding: 12px 20px;
+    font-size: 1.1rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .stopwatch-buttons button:hover {
+    background-color: #004d38;
+  }
+
+  #settingsPanel {
+    display: none;
+    position: fixed;
+    bottom: 70px;
+    right: 10px;
+    background: var(--background-color);
+    border: 1px solid var(--primary-color);
+    padding: 15px;
+    z-index: 1000;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    color: var(--text-color);
+    width: 220px;
+  }
+
+  #settingsPanel label {
+    display: block;
+    margin: 8px 0;
+    cursor: pointer;
+  }
+
+  input[type="checkbox"] {
+    margin-right: 8px;
+    cursor: pointer;
+  }
+
+  #settingsBtn {
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+    left: auto;
+    transform: none;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    z-index: 1100;
+  }
+
+  #settingsBtn:hover {
+    background-color: #004d38;
+  }
+
+  /* Bionic reading simple effect */
+  .bionic-reading * {
+    font-family: Arial, sans-serif;
+  }
+  .bionic-reading p, .bionic-reading button {
+    font-weight: normal;
+  }
+  .bionic-reading span.bionic {
+    font-weight: 700;
+  }
+
+  @media (max-width: 320px) {
+    button {
+      min-width: 140px;
+      font-size: 1rem;
+      padding: 10px 15px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <img src="nhs.png" alt="NHS Logo" class="header-logo" />
+  <h1>CFR Toolbox</h1>
+  <img src="secamb.png" alt="SECamb Logo" class="header-logo" />
+</header>
+
+<div class="toolbox">
+  <button onclick="openApp('uk.co.classprofessional.cfr')">Responder Plus</button>
+  <button onclick="openApp('com.gumptionmultimedia.news2chart')">NEWS2</button>
+  <button onclick="openApp('com.goassemble.app')">Assemble</button>
+  <button onclick="openApp('uk.co.terrafix.nma')">NMA</button>
+  <button onclick="openApp('com.what3words.android', 'https://what3words.com')">W3W</button>
+  <button onclick="openApp('com.softwareeurope.expensesmobile')">CFR Expenses</button>
+  <button onclick="openApp('com.microsoft.office.outlook', null, true)">Trust Email</button>
+  <button onclick="openContacts()">Contacts</button>
+  <button onclick="openWebsite('https://aball0386.github.io/Falls-Assist-App/index.html')">Falls Assist</button>
+</div>
+
+<div id="stopwatch">
+  <div id="time">00:00:00</div>
+  <div class="stopwatch-buttons">
+    <button id="startStopBtn" onclick="toggleStopwatch()">Start</button>
+    <button onclick="resetStopwatch()">Reset</button>
+  </div>
+</div>
+
+<button id="settingsBtn" aria-label="Open settings" onclick="toggleMenu()">⚙️</button>
+
+<div id="settingsPanel" role="region" aria-label="Settings menu">
+  <label><input type="checkbox" id="darkModeToggle"> Dark Mode</label>
+  <label><input type="checkbox" id="themeColorToggle"> Responder Red Theme</label>
+  <label><input type="checkbox" id="bionicToggle"> Bionic Reading</label>
+</div>
+
+<script>
+  // Settings menu toggle
+  function toggleMenu() {
+    const panel = document.getElementById('settingsPanel');
+    panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+  }
+
+  // Dark mode toggle
+  document.getElementById('darkModeToggle').addEventListener('change', e => {
+    if(e.target.checked) {
+      document.body.classList.add('dark-mode');
+    } else {
+      document.body.classList.remove('dark-mode');
+    }
+    localStorage.setItem('darkMode', e.target.checked);
+  });
+
+  // Theme color toggle
+  document.getElementById('themeColorToggle').addEventListener('change', e => {
+    if(e.target.checked) {
+      document.documentElement.classList.add('responder-red');
+    } else {
+      document.documentElement.classList.remove('responder-red');
+    }
+    localStorage.setItem('themeColor', e.target.checked ? 'red' : 'green');
+  });
+
+  // Bionic reading toggle
+  document.getElementById('bionicToggle').addEventListener('change', e => {
+    if(e.target.checked) {
+      document.body.classList.add('bionic-reading');
+      applyBionicReading();
+    } else {
+      document.body.classList.remove('bionic-reading');
+      removeBionicReading();
+    }
+    localStorage.setItem('bionicReading', e.target.checked);
+  });
+
+  // Load saved preferences
+  window.onload = () => {
+    if(localStorage.getItem('darkMode') === 'true') {
+      document.body.classList.add('dark-mode');
+      document.getElementById('darkModeToggle').checked = true;
+    }
+    if(localStorage.getItem('themeColor') === 'red') {
+      document.documentElement.classList.add('responder-red');
+      document.getElementById('themeColorToggle').checked = true;
+    }
+    if(localStorage.getItem('bionicReading') === 'true') {
+      document.body.classList.add('bionic-reading');
+      document.getElementById('bionicToggle').checked = true;
+      applyBionicReading();
+    }
+  };
+
+  // Simple bionic reading effect
+  function applyBionicReading() {
+    const elements = document.querySelectorAll('.toolbox button, #stopwatch');
+    elements.forEach(el => {
+      const text = el.textContent || el.innerText;
+      const words = text.split(' ');
+      const newHtml = words.map(word => {
+        const mid = Math.ceil(word.length / 2);
+        return `<span class="bionic">${word.slice(0, mid)}</span>${word.slice(mid)}`;
+      }).join(' ');
+      el.innerHTML = newHtml;
+    });
+  }
+  function removeBionicReading() {
+    location.reload();
+  }
+
+  // Open app with fallback
+  function openApp(packageName, fallbackUrl = null, isOutlook = false) {
+    if (!packageName) return;
+
+    const isAndroid = /android/i.test(navigator.userAgent);
+    if (!isAndroid) {
+      if (fallbackUrl) {
+        window.open(fallbackUrl, '_blank');
+      } else {
+        alert('This function works best on Android devices.');
+      }
+      return;
+    }
+
+    if (!fallbackUrl) {
+      fallbackUrl = `https://play.google.com/store/apps/details?id=${packageName}`;
+    }
+
+    let intentUrl = `intent://#Intent;package=${packageName};S.browser_fallback_url=${encodeURIComponent(fallbackUrl)};end`;
+    if (isOutlook) {
+      intentUrl = `intent://#Intent;package=com.microsoft.office.outlook;S.browser_fallback_url=${encodeURIComponent(fallbackUrl)};end`;
+    }
+
+    let opened = false;
+    window.location.href = intentUrl;
+
+    setTimeout(() => {
+      if (!opened) {
+        if (confirm('App not detected. Open Play Store page?')) {
+          window.open(fallbackUrl, '_blank');
+        }
+      }
+    }, 1500);
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        opened = true;
+      }
+    });
+  }
+
+  // Open website in new tab
+  function openWebsite(url) {
+    window.open(url, '_blank');
+  }
+
+  // Open native Contacts app on Android
+  function openContacts() {
+    const isAndroid = /android/i.test(navigator.userAgent);
+    if (isAndroid) {
+      window.location.href = 'intent://contacts/people/#Intent;action=android.intent.action.VIEW;category=android.intent.category.DEFAULT;end';
+    } else {
+      alert('Opening Contacts app is supported only on Android devices.');
+    }
+  }
+
+  // Stopwatch toggle start/stop and reset
+
+  let stopwatchInterval = null;
+  let elapsedTime = 0;
+  const startStopBtn = document.getElementById('startStopBtn');
+
+  function updateStopwatchDisplay() {
+    const hours = Math.floor(elapsedTime / 3600);
+    const mins = Math.floor((elapsedTime % 3600) / 60);
+    const secs = elapsedTime % 60;
+    document.getElementById('time').textContent =
+      `${hours.toString().padStart(2,'0')}:` +
+      `${mins.toString().padStart(2,'0')}:` +
+      `${secs.toString().padStart(2,'0')}`;
+  }
+
+  function toggleStopwatch() {
+    if (stopwatchInterval) {
+      // Stop it
+      clearInterval(stopwatchInterval);
+      stopwatchInterval = null;
+      startStopBtn.textContent = 'Start';
+    } else {
+      // Start it
+      stopwatchInterval = setInterval(() => {
+        elapsedTime++;
+        updateStopwatchDisplay();
+      }, 1000);
+      startStopBtn.textContent = 'Stop';
+    }
+  }
+
+  function resetStopwatch() {
+    if (stopwatchInterval) {
+      clearInterval(stopwatchInterval);
+      stopwatchInterval = null;
+      startStopBtn.textContent = 'Start';
+    }
+    elapsedTime = 0;
+    updateStopwatchDisplay();
+  }
+
+  updateStopwatchDisplay();
+</script>
+
+</body>
+</html>
