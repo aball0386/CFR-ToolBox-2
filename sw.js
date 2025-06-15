@@ -96,47 +96,11 @@ function removeBionicReading() {
   location.reload();
 }
 
-// Open app with fallback
-function openApp(packageName, fallbackUrl = null, isOutlook = false) {
-  if (!packageName) return;
+// Open Mail Default
+function openMail() {
+  // Customize recipient, subject, or body if you want
+  window.location.href = 'mailto:?subject=SECamb%20CFR%20Enquiry';
 
-  const isAndroid = /android/i.test(navigator.userAgent);
-  if (!isAndroid) {
-    if (fallbackUrl) {
-      window.open(fallbackUrl, '_blank');
-    } else {
-      alert('This function works best on Android devices.');
-    }
-    return;
-  }
-
-  if (!fallbackUrl) {
-    fallbackUrl = `https://play.google.com/store/apps/details?id=${packageName}`;
-  }
-
-  let intentUrl;
-  if (isOutlook) {
-    intentUrl = `intent://#Intent;package=com.microsoft.office.outlook;S.browser_fallback_url=${encodeURIComponent(fallbackUrl)};end`;
-  } else {
-    intentUrl = `intent://#Intent;package=${packageName};S.browser_fallback_url=${encodeURIComponent(fallbackUrl)};end`;
-  }
-
-  let opened = false;
-  window.location.href = intentUrl;
-
-  setTimeout(() => {
-    if (!opened) {
-      if (confirm('App not detected. Open Play Store page?')) {
-        window.open(fallbackUrl, '_blank');
-      }
-    }
-  }, 1500);
-
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-      opened = true;
-    }
-  });
 }
 
 // Open website in new tab
